@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- Основные цвета --- */
+  --color-primary: #2563EB;
+  --color-primary-hover: #1E40AF;
+  --color-secondary: #B033EA;
+  --color-secondary-hover: #7B21A4;
+  --color-not-active: #3B3B3B;
+
+  /* --- Фон и поверхности --- */
+  --color-bg: #101727;
+  --color-surface-lite: #5B6472;
+  --color-surface-lite-clicked: #414852;
+  --color-surface: #1E293A;
+  --color-surface-focus: #161F2C;
+  --color-surface-alt: #2D2B38;
+
+  /* --- Границы и текст --- */
+  --color-border: #44526E;
+  --color-text: #E0E0E0;
+  --color-text-not-active: #7D7D7D;
+  --color-text-secondary: #A1A1AA;
+
+  /* --- Состояния --- */
+  --color-error: #F83A3A;
+  --color-error-hover: #A32727;
+  --color-success: #16A34A;
+
+  --shadow-3xl: 0 15px 35px rgba(0, 0, 0, 0.75);
+}
+
+/* Исправление цвета автозаполнения в тёмной теме */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface) inset !important;
+  -webkit-text-fill-color: #E0E0E0 !important;
+  caret-color: #E0E0E0 !important;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-focus) inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
