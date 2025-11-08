@@ -10,6 +10,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import AdminPage from "../pages/AdminPage";
+import CollectionPage from "../pages/CollectionPage";
 
 const AppRouter = () => {
   return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
           <Route path="edit/:id" element={<EditPostPage />} />
           <Route path="profile/:id" element={<ProfilePage />} />
           <Route path="admin" element={<AdminPage />} />
+          <Route path="collections" element={<CollectionPage />} />
         </Route>
 
         {/* Аутентификация */}

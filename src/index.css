@@ -20,7 +20,7 @@
   --color-border: #44526E;
   --color-text: #E0E0E0;
   --color-text-not-active: #7D7D7D;
-  --color-text-secondary: #A1A1AA;
+  --color-text-secondary: #E0E0E0;
 
   /* --- Состояния --- */
   --color-error: #F83A3A;
@@ -28,6 +28,26 @@
   --color-success: #16A34A;
 
   --shadow-3xl: 0 15px 35px rgba(0, 0, 0, 0.75);
+}
+
+[data-theme="dark"] {
+  --color-bg: #101727;
+  --color-surface-lite: #5B6472;
+  --color-surface-lite-clicked: #414852;
+  --color-surface: #1E293A;
+  --color-surface-focus: #161F2C;
+  --color-surface-alt: #2D2B38;
+  --color-text: #E0E0E0;
+}
+
+[data-theme="light"] {
+  --color-bg: #F3F4F6;
+  --color-surface: #E5E7EB;
+  --color-surface-lite: #FFFFFF;
+  --color-surface-lite-clicked: #E8EAED;
+  --color-surface-focus: #DDE1E6;
+  --color-surface-alt: #F9FAFB;
+  --color-text: #000000;
 }
 
 /* Исправление цвета автозаполнения в тёмной теме */
@@ -43,4 +63,32 @@ input:-webkit-autofill:active {
 input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px var(--color-surface-focus) inset !important;
   transition: background-color 9999s ease-in-out 0s;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out forwards;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+body {
+  overflow-y: scroll;
 }

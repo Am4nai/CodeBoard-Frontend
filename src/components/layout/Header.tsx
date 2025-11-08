@@ -32,7 +32,6 @@ export default function Header() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     navigate(`/search?query=${searchText}`)
   }
 
@@ -45,27 +44,30 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-surface backdrop-blur-md shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 sm:px-8">
         {/* Логотип */}
-        <Link to="/" className="text-xl font-bold text-text">
+        <Link to="/" className="text-xl font-bold text-text" onClick={() => {setSearchText("")}}>
           CodeBoard
         </Link>
 
-        <form onSubmit={handleSubmit} className="flex grow px-16">
+        <form onSubmit={handleSubmit} className="flex grow pl-8">
           <input
             type="text"
             placeholder="Search posts..."
             value={searchText}
             onChange={(e) => {setSearchText(e.target.value)}}
-            className="grow rounded-lg px-4 py-1 bg-surface-lite focus:outline-none focus:bg-surface-lite-clicked transition-colors duration-200 ease-in-out"
+            className="grow rounded-lg px-4 py-1 bg-surface-lite focus:outline-none focus:bg-surface-lite-clicked transition-colors duration-200 ease-in-out text-text"
           />
         </form>
 
         {/* Навигация (десктоп) */}
-        <nav className="pr-16 hidden md:flex gap-6 text-text font-medium">
+        <nav className="px-12 hidden md:flex gap-6 text-text font-medium">
           <Link to="/" className="hover:text-primary-hover transition-colors duration-200 ease-in-out" onClick={() => {setSearchText("")}}>
-            Главная
+            Home
           </Link>
           <Link to="/create" className="hover:text-primary-hover transition-colors duration-200 ease-in-out" onClick={() => {setSearchText("")}}>
-            Создать
+            Create
+          </Link>
+          <Link to="/collections" className="hover:text-primary-hover transition-colors duration-200 ease-in-out" onClick={() => {setSearchText("")}}>
+            Collections
           </Link>
         </nav>
 
@@ -91,19 +93,19 @@ export default function Header() {
                     to={`/profile/${user.id}`}
                     className="block px-4 py-2 text-sm text-text hover:bg-bg transition-colors duration-200 ease-in-out"
                   >
-                    Профиль
+                    Profile
                   </Link>
                   <Link
                     to="/settings"
                     className="block px-4 py-2 text-sm text-text hover:bg-bg transition-colors duration-200 ease-in-out"
                   >
-                    Настройки
+                    Settings
                   </Link>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-error hover:bg-bg transition-colors duration-200 ease-in-out"
                   >
-                    Выйти
+                    Log out
                   </button>
                 </div>
               )}
@@ -128,7 +130,7 @@ export default function Header() {
 
         {/* Мобильный бургер */}
         <button
-          className="md:hidden text-text hover:text-primary-hover"
+          className="md:hidden text-text hover:text-primary-hover pl-8"
           onClick={toggleMenu}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -139,10 +141,13 @@ export default function Header() {
       {isMenuOpen && (
         <nav className="md:hidden flex flex-col items-center gap-4 py-4 text-text font-medium bg-surface border-t">
           <Link to="/" className="hover:text-primary-hover transition-colors duration-200 ease-in-out">
-            Главная
+            Home
           </Link>
           <Link to="/create" className="hover:text-primary-hover transition-colors duration-200 ease-in-out">
-            Создать
+            Create
+          </Link>
+          <Link to="/collections" className="hover:text-primary-hover transition-colors duration-200 ease-in-out">
+            Collections
           </Link>
           {user ? (
             <>
@@ -150,16 +155,16 @@ export default function Header() {
                 to={`/profile/${user.id}`}
                 className="hover:text-primary-hover transition-colors duration-200 ease-in-out"
               >
-                Профиль
+                Profile
               </Link>
               <Link to="/settings" className="hover:text-primary-hover transition-colors duration-200 ease-in-out">
-                Настройки
+                Settings
               </Link>
               <button
                 onClick={handleLogout}
                 className="text-error hover:text-error-hover transition-colors duration-200 ease-in-out"
               >
-                Выйти
+                Log out
               </button>
             </>
           ) : (

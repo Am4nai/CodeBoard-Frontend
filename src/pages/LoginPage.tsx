@@ -47,11 +47,11 @@ const LoginPage: React.FC = () => {
 
           {error && <p className="text-error text-sm mt-2">{error}</p>}
 
-          <button type="submit" disabled={isDisabled} className="bg-secondary p-4 mb-2 mt-2 rounded-lg hover:bg-secondary-hover disabled:bg-not-active disabled:text-text-not-active transition-all duration-200 ease-in-out not-disabled:hover:py-5">
+          <button type="submit" disabled={isDisabled} className="bg-secondary p-4 mb-2 mt-2 rounded-lg text-text-secondary hover:bg-secondary-hover disabled:bg-not-active disabled:text-text-not-active transition-all duration-200 ease-in-out not-disabled:hover:py-5">
             Continue
           </button>
 
-          <button type="button" className="bg-primary mt-2 rounded-lg hover:bg-primary-hover p-4 transition-all duration-200 ease-in-out hover:py-5">Continue with GitHub</button>
+          <button type="button" className="bg-primary mt-2 rounded-lg hover:bg-primary-hover p-4 transition-all duration-200 ease-in-out hover:py-5 text-text-secondary">Continue with GitHub</button>
         </form>
       </div>
 

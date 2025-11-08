@@ -57,14 +57,14 @@ const RegisterPage: React.FC = () => {
           <button 
             type="submit"
             disabled={isDisabled}
-            className="bg-secondary p-4 mb-2 mt-2 rounded-lg hover:bg-secondary-hover disabled:bg-not-active disabled:text-text-not-active transition-all duration-200 ease-in-out not-disabled:hover:py-5"
+            className="text-text-secondary bg-secondary p-4 mb-2 mt-2 rounded-lg hover:bg-secondary-hover disabled:bg-not-active disabled:text-text-not-active transition-all duration-200 ease-in-out not-disabled:hover:py-5"
           >
             Continue
           </button>
 
           <button
             type="button"
-            className="bg-primary mt-2 rounded-lg hover:bg-primary-hover p-4 transition-all duration-200 ease-in-out hover:py-5"
+            className="text-text-secondary bg-primary mt-2 rounded-lg hover:bg-primary-hover p-4 transition-all duration-200 ease-in-out hover:py-5"
           >
             Continue with GitHub
           </button>
