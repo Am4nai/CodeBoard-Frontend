@@ -12,11 +12,22 @@ import NotFoundPage from "../pages/NotFoundPage";
 import AdminPage from "../pages/AdminPage";
 import CollectionPage from "../pages/CollectionPage";
 
+import ProtectedRoute from "../components/ui/ProtectedRoute";
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+
+        {/* защищённая часть */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<HomePage />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="post/:id" element={<PostPage />} />
@@ -27,7 +38,7 @@ const AppRouter = () => {
           <Route path="collections" element={<CollectionPage />} />
         </Route>
 
-        {/* Аутентификация */}
+        {/* публичные */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
