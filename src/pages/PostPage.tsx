@@ -24,7 +24,6 @@ const PostPage: React.FC = () => {
   const [language, setLanguage] = useState("");
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
-  const [error, setError] = useState("");
   const [like, setLike] = useState(heartoff);
   const [commentsHidden, setCommentsHidden] = useState(true);
   const [comments, setComments] = useState<Comment[]>();
@@ -53,7 +52,6 @@ const PostPage: React.FC = () => {
       setCommentCount(post.data.comment_count);
       refreshComments();
     } catch (err) {
-      setError("Error fetching post");
       console.log(err);
     }
   }

@@ -67,12 +67,11 @@ const SearchPage: React.FC = () => {
   const parseQuery = (raw: string) => {
     const parts = raw.split(" ").filter(Boolean);
     const tags = parts.filter(w => w.startsWith("#"));
-    const textParts = parts.filter(w => !w.startsWith("#"));
 
-    return { tags, textParts };
+    return { tags };
   };
 
-  const { tags, textParts } = parseQuery(query);
+  const { tags } = parseQuery(query);
 
   const removeTag = (tagToRemove: string) => {
     const newQuery = query

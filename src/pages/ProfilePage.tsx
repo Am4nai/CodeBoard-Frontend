@@ -19,7 +19,6 @@ const ProfilePage: React.FC = () => {
 
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
-  const [Role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
   const [createdAt, setCreatedAt] = useState("");
@@ -27,12 +26,6 @@ const ProfilePage: React.FC = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-
-  
-  const handleThemeChange = (theme: "light" | "dark") => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }
   
   const fetchPosts = async () => {
     try {
@@ -77,7 +70,6 @@ const ProfilePage: React.FC = () => {
 
       setUserId(user.data.id);
       setUsername(user.data.username);
-      setRole(user.data.role);
       setEmail(user.data.email);
       setBio(user.data.bio);
       setCreatedAt(user.data.created_at);
