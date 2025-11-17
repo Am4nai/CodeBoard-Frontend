@@ -13,7 +13,8 @@ const ProfilePage: React.FC = () => {
   };
 
   const { id } = useParams<{ id: string }>();
-
+  const authUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const isOwner = authUser?.id === Number(id);
   const [posts, setPosts] = useState<PostCardProps[]>([]);
 
   const [userId, setUserId] = useState("");
@@ -88,7 +89,9 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     getProfile();
-  }, [])
+    setLoading(true);
+    setPosts([]);
+  }, [id]);
 
   useEffect(() => {
     if (userId) {
@@ -107,12 +110,13 @@ const ProfilePage: React.FC = () => {
             alt="avatar"
             className="w-32 h-32 rounded-full border my-4"
           />
-          <input type="text" className="text-center" value={username} onChange={(e) => { setUsername(e.target.value)}}></input>
-          <input type="text" className="text-center" value={email} onChange={(e) => { setEmail(e.target.value)}}></input>
+          <input disabled={!isOwner} type="text" className="text-center" value={username} onChange={(e) => { setUsername(e.target.value)}}></input>
+          <input disabled={!isOwner} type="text" className="text-center" value={email} onChange={(e) => { setEmail(e.target.value)}}></input>
         </form>
 
         <form className="flex flex-col flex-4 gap-4">
           <textarea
+            disabled={!isOwner}
             className="bg-surface grow rounded-2xl resize-none p-4 focus:bg-surface-focus focus:outline-none transition-colors duration-200 ease-in-out text-text"
             value={bio}
             onChange={(e) => { setBio(e.target.value) }}
@@ -122,12 +126,12 @@ const ProfilePage: React.FC = () => {
       </section>
 
       <section className="relative flex grow justify-end z-2 animate-fade-up transition-all duration-200 ease-in-out">
-        <button
+        {isOwner && <button
           className="bg-primary rounded-2xl px-4 py-2 hover:bg-primary-hover transition-all duration-200 ease-in-out text-text hover:scale-[1.05]"
           onClick={updateProfile}
         >
           Update
-        </button>
+        </button>}
       </section>
 
       <section
@@ -142,7 +146,7 @@ const ProfilePage: React.FC = () => {
           columnClassName="space-y-6"
         >
           {posts.map(post => (
-            <PostCard key={post.id} {...post} editable mode="add"/>
+            <PostCard key={post.id} {...post} editable={isOwner} mode="add"/>
           ))}
         </Masonry>
       </section>

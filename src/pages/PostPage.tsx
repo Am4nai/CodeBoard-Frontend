@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../api/axiosInstance";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import CommentThread  from "../components/ui/CommentThread";
 import type { Comment } from "../types/interfaces";
 
@@ -16,6 +16,8 @@ import comment from "../components/svg/comment.svg";
 
 
 const PostPage: React.FC = () => {
+  const [authorId, setAuthorId] = useState(0);
+  const [authorName, setAuthorName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [code, setCode] = useState("");
@@ -29,6 +31,8 @@ const PostPage: React.FC = () => {
   const [focusedCommentId, setFocusedCommentId] = useState<number | null>(null);
   const [commentText, setCommentText] = useState("");
 
+  const navigate = useNavigate();
+
 
   const { id } = useParams<{ id: string }>();
 
@@ -38,6 +42,9 @@ const PostPage: React.FC = () => {
       const isLiked = await api.get(`/likes/${id}/is-liked`);
       if (isLiked.data.liked) setLike(hearton);
       else setLike(heartoff);
+      
+      setAuthorId(post.data.author_id);
+      setAuthorName(post.data.author_name);
       setTitle(post.data.title);
       setDescription(post.data.description);
       setCode(post.data.code);
@@ -140,6 +147,11 @@ const PostPage: React.FC = () => {
               {code}
             </code>
           </pre>
+
+          <section className="flex gap-2">
+            <p>Author: </p>
+            <p onClick={() => {navigate(`/profile/${authorId}`)}}>{authorName}</p>
+          </section>
         </form>
         <form className="gap-2 flex flex-1 flex-col w-full rounded-2xl p-4 shadow-3xl justify-between bg-bg text-text">
           <input

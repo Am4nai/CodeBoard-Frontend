@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import type { PostCardProps } from "../types/interfaces";
 import PostCard from "../components/ui/PostCard";
 import { api } from "../api/axiosInstance";
 
 const SearchPage: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const breakpointColumnsObj = {
     default: 3,
     1024: 2,
@@ -19,14 +22,17 @@ const SearchPage: React.FC = () => {
   const [error, setError] = useState("");
   const [posts, setPosts] = useState<PostCardProps[]>([]);
   const [page, setPage] = useState(1);
-  
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (reset = false) => {
+    if (!query) return;
     console.log(query);
-    
+
+    setLoading(true);
+    setError("");
     try {
-      const response = await api.get(`/posts/search?query=${query}&page=${page}&limit=15`);
+      const response = await api.get(`/posts/search?query=${encodeURIComponent(query)}&page=${page}&limit=15`);
       
+
       const mapped = response.data.posts.map((p: any) => ({
         id: p.id,
         title: p.title,
@@ -39,51 +45,86 @@ const SearchPage: React.FC = () => {
         comments: p.comment_count,
       }));
 
-      setPosts(prev => [...prev, ...mapped]);
+      setPosts((prev) => (reset ? mapped : [...prev, ...mapped]));
     } catch (err) {
-      setError("Error fetching posts")
-      console.log(err);
+      setError("Error fetching posts");
+      console.error(err);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleScroll = () => {
     if (isThrottled.current) return;
-
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
     if (scrollTop + clientHeight >= scrollHeight - 50) {
-      setPage(prev => prev + 1);
+      setPage((prev) => prev + 1);
       isThrottled.current = true;
       setTimeout(() => (isThrottled.current = false), 500);
     }
   };
+
+  const parseQuery = (raw: string) => {
+    const parts = raw.split(" ").filter(Boolean);
+    const tags = parts.filter(w => w.startsWith("#"));
+    const textParts = parts.filter(w => !w.startsWith("#"));
+
+    return { tags, textParts };
+  };
+
+  const { tags, textParts } = parseQuery(query);
+
+  const removeTag = (tagToRemove: string) => {
+    const newQuery = query
+      .split(" ")
+      .filter(w => w !== tagToRemove)
+      .join(" ");
+
+    navigate(`/search?query=${encodeURIComponent(newQuery)}`);
+  };
+
+  // Следим за изменением query → сбрасываем результаты
+  useEffect(() => {
+    setPage(1);
+    setPosts([]);
+    fetchPosts(true);
+  }, [location.search]);
+
+  // Подгружаем посты при скролле (если query есть)
+  useEffect(() => {
+    if (page > 1) fetchPosts();
+  }, [page]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    fetchPosts();
-  }, [page]);
-
   return (
-    <main className="p-6 text-gray-200">
-      <h1 className="text-3xl font-bold mb-4">Searched posts</h1>
-      <section>
-        {error && <p className="text-error">{error}</p>}
-        {loading && <p>Загрузка...</p>}
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="flex gap-6"
-          columnClassName="space-y-6"
+    <main className="p-6 text-text">
+      {tags.map((tag, idx) => (
+        <button
+          key={idx}
+          className="px-3 py-1 bg-primary text-text rounded-lg hover:bg-primary-hover transition cursor-pointer"
+          onClick={() => removeTag(tag)}
         >
-          {posts.map(post => (
-            <PostCard key={post.id} {...post} mode="add" />
-          ))}
+          {tag} ×
+        </button>
+      ))}
+      <h1 className="text-3xl font-bold mb-4">
+        Results for: <span className="text-primary">{query}</span>
+      </h1>
+      {error && <p className="text-error">{error}</p>}
+      {loading && <p>Загрузка...</p>}
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="flex gap-6"
+        columnClassName="space-y-6"
+      >
+        {posts.map((post) => (
+          <PostCard key={post.id} {...post} mode="add" />
+        ))}
       </Masonry>
-      </section>
     </main>
   );
 };

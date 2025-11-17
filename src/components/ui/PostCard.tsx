@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import type { PostCardProps } from "../../types/interfaces";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/axiosInstance";
+import AddToCollectionModal from "./AddToCollectionModal";
 
 const PostCard: React.FC<PostCardProps> = ({
   id,
@@ -17,6 +18,7 @@ const PostCard: React.FC<PostCardProps> = ({
   fetchCollectionData,
 }) => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <article
@@ -42,12 +44,9 @@ const PostCard: React.FC<PostCardProps> = ({
 
             {mode === "add" && (
               <button
-                onClick={async (e) => {
+                onClick={(e) => {
                   e.stopPropagation();
-                  const collectionId = prompt("Введите ID коллекции:");
-                  if (!collectionId) return;
-                  await api.post(`/collections/${collectionId}/posts/`, { postId: id });
-                  alert("Пост добавлен!");
+                  setShowModal(true);
                 }}
                 className="text-primary hover:text-primary-hover transition-colors"
               >
@@ -68,6 +67,13 @@ const PostCard: React.FC<PostCardProps> = ({
               >
                 🗑
               </button>
+            )}
+
+            {showModal && (
+              <AddToCollectionModal
+                postId={id}
+                onClose={() => setShowModal(false)}
+              />
             )}
           </div>
         </footer>
