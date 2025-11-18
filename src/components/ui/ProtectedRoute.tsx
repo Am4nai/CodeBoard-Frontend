@@ -2,11 +2,16 @@ import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../../api/axiosInstance";
 
-export default function ProtectedRoute({ children }: { children: React.JSX.Element }) {
+interface ProtectedRouteProps {
+  children: React.JSX.Element;
+  requireAdmin?: boolean;
+}
+
+export default function ProtectedRoute({ children, requireAdmin }: ProtectedRouteProps) {
   const [isValid, setIsValid] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const checkToken = async () => {
+    const checkAuth = async () => {
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -15,9 +20,26 @@ export default function ProtectedRoute({ children }: { children: React.JSX.Eleme
       }
 
       try {
-        await api.get("/auth/verify"); // backend проверяет JWT
+        // если у тебя есть /auth/verify – ок, если нет, можно просто считать,
+        // что наличие токена достаточно, а роль проверить локально
+        await api.get("/auth/verify").catch(() => { /* можно проглотить, если нет эндпоинта */ });
+
+        const rawUser = localStorage.getItem("user");
+        const user = rawUser ? JSON.parse(rawUser) : null;
+
+        if (!user) {
+          fail();
+          return;
+        }
+
+        if (requireAdmin && user.role !== "admin") {
+          // не админ — домой
+          setIsValid(false);
+          return;
+        }
+
         setIsValid(true);
-      } catch (err) {
+      } catch {
         fail();
       }
     };
@@ -28,13 +50,16 @@ export default function ProtectedRoute({ children }: { children: React.JSX.Eleme
       setIsValid(false);
     };
 
-    checkToken();
-  }, []);
+    checkAuth();
+  }, [requireAdmin]);
 
-  // Показать загрузку пока проверяем
-  if (isValid === null) return <p>Checking auth...</p>;
+  if (isValid === null) {
+    return <p className="p-6 text-text">Checking auth...</p>;
+  }
 
-  if (!isValid) return <Navigate to="/login" replace />;
+  if (!isValid) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 }

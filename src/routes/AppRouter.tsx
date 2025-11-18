@@ -13,13 +13,12 @@ import AdminPage from "../pages/AdminPage";
 import CollectionPage from "../pages/CollectionPage";
 
 import ProtectedRoute from "../components/ui/ProtectedRoute";
+// ...
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* защищённая часть */}
         <Route
           path="/"
           element={
@@ -34,11 +33,21 @@ const AppRouter = () => {
           <Route path="create" element={<CreatePostPage />} />
           <Route path="edit/:id" element={<EditPostPage />} />
           <Route path="profile/:id" element={<ProfilePage />} />
-          <Route path="admin" element={<AdminPage />} />
+
+          {/* только админ */}
+          <Route
+            path="admin"
+            element={
+              <ProtectedRoute requireAdmin>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="collections" element={<CollectionPage />} />
         </Route>
 
-        {/* публичные */}
+        {/* Аутентификация */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
